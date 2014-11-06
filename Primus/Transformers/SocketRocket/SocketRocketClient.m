@@ -74,7 +74,11 @@ typedef NS_ENUM(NSInteger, SocketRocketErrorCode) {
     }
 
     @try {
-        [_socket send:data];
+//        [_socket send:data];
+        //バイナリのまま送ると送信できなかったので、UTF8に変換してからsendメソッドを呼ぶように修正
+        NSString *string = [[NSString alloc] initWithData:data
+                                                 encoding:NSUTF8StringEncoding];
+        [_socket send:string];
     }
     @catch (NSException *exception) {
         [_primus emit:@"incoming::error", exception];
